@@ -1,16 +1,16 @@
 import pandas as pd
 
-from google_apis import create_service
+from google_settings.google_apis import create_service
 
 
-CLIENT_SECRET_FILE = 'client_secrets.json'
+CLIENT_SECRET_FILE = 'google_settings/client_secrets.json'
 API_NAME = 'drive'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
-file_list = pd.read_excel('template.xlsx', sheet_name='files')
+file_list = pd.read_excel('template_sharing.xlsx', sheet_name='files')
 file_list = file_list.fillna('')
 
 

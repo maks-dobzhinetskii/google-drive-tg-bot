@@ -2,15 +2,16 @@ import mimetypes
 import pandas as pd
 
 from googleapiclient.http import MediaFileUpload
-from google_apis import create_service
 
-client_file = 'client_secrets.json'
+from google_settings.google_apis import create_service
+
+client_file = 'google_settings/client_secrets.json'
 API_NAME = 'drive'
 API_VERSION = 'v3'
 SCOPES = ['https://www.googleapis.com/auth/drive']
 service = create_service(client_file, API_NAME, API_VERSION, SCOPES)
 
-file_list = pd.read_excel('template.xlsx', sheet_name='files')
+file_list = pd.read_excel('template_upload.xlsx', sheet_name='files')
 file_list = file_list.fillna('')
 
 
