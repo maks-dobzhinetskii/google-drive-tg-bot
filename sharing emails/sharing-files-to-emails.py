@@ -2,8 +2,6 @@ import pandas as pd
 
 from google_apis import create_service
 
-from sending_emails import send_email
-
 
 CLIENT_SECRET_FILE = 'client_secrets.json'
 API_NAME = 'drive'
@@ -24,26 +22,13 @@ def sharing_file_link():
 
         request_body = {
             'role': 'reader',
-            'type': 'anyone'
+            'type': 'user',
+            'emailAddress': email
         }
 
-        response_permission = service.permissions().create(
+        service.permissions().create(
             fileId=file_id,
-            body=request_body
-        ).execute()
-
-        print(response_permission)
-
-        response_share_link = service.files().get(
-            fileId=file_id,
-            fields='webViewLink'
-        ).execute()
-
-        send_email(email, response_share_link['webViewLink'])
-
-        service.permissions().delete(
-            fileId=file_id,
-            permissionId='anyoneWithLink'
+            body=request_body,
         ).execute()
 
 
