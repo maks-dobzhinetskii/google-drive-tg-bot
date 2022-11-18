@@ -11,7 +11,7 @@ API_VERSION = "v3"
 SCOPES = ["https://www.googleapis.com/auth/drive"]
 service = create_service(client_file, API_NAME, API_VERSION, SCOPES)
 
-file_list = pd.read_excel("file_1.xlsx", sheet_name="files")
+file_list = pd.read_excel("template_upload.xlsx", sheet_name="files")
 file_list = file_list.fillna("")
 
 
