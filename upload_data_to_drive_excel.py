@@ -4,7 +4,7 @@ import pandas as pd
 from googleapiclient.http import MediaFileUpload
 
 from google_settings.google_apis import create_service
-
+from utils import overwrite_files
 
 CLIENT_SECRET_FILE = 'google_settings/client_secrets.json'
 API_NAME = 'drive'
@@ -39,6 +39,8 @@ def upload_files(excel_file_path: str) -> None:
 
         if not any(file_name == dictionary['name'] for dictionary in files):
             service.files().create(body=request_body, media_body=media_content).execute()
+        else:
+            overwrite_files(files, file_name, service, request_body, media_content)
 
 
 if __name__ == '__main__':

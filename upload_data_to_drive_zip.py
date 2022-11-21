@@ -1,5 +1,4 @@
 import mimetypes
-import pandas as pd
 
 from typing import List
 from googleapiclient.http import MediaFileUpload
@@ -15,7 +14,6 @@ service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
 
 def upload_files(lst_of_path: List[str]) -> None:
-
     folder_id = '1lVZH7ZUeYa2Seat-UYFz99TLkrVMa0VQ'
     query = f"parents = '{folder_id}'"
     response = service.files().list(q=query).execute()
