@@ -1,8 +1,10 @@
+from googleapiclient.discovery import Resource
+from typing import List
+
 from googleapiclient.http import MediaFileUpload
-from typing import List, Any
 
 
-def overwrite_files(files: List[dict], file_name: str, service: Any, request_body: dict, media_content: MediaFileUpload) -> None:
+def overwrite_files(files: List[dict], file_name: str, service: Resource, request_body: dict, media_content: MediaFileUpload) -> None:
     for dictionary in files:
         if file_name == dictionary['name']:
             result = input(f'Do you want to overwrite {file_name} file?')
