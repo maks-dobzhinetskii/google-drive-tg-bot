@@ -1,9 +1,10 @@
 import mimetypes
-import pandas as pd
 
+from typing import List
 from googleapiclient.http import MediaFileUpload
 
 from google_settings.google_apis import create_service
+
 
 CLIENT_SECRET_FILE = 'google_settings/client_secrets.json'
 API_NAME = 'drive'
@@ -12,20 +13,17 @@ SCOPES = ['https://www.googleapis.com/auth/drive']
 service = create_service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
 
-def upload_files(excel_file_path: str) -> None:
-    file_list = pd.read_excel(excel_file_path, sheet_name='files')
-    file_list = file_list.fillna('')
-
+def upload_files(lst_of_path: List[str]) -> None:
     folder_id = '1lVZH7ZUeYa2Seat-UYFz99TLkrVMa0VQ'
     query = f"parents = '{folder_id}'"
     response = service.files().list(q=query).execute()
     files = response.get('files')
 
-    for row in file_list.iterrows():
-        file_name = row[1]['File Name']
-        parent_folder_id = row[1]['Folder Id']
-        starred = row[1]['Starred']
-        file_path = row[1]['File Path']
+    for file in lst_of_path:
+        file_name = file.split('\\')[-1]
+        parent_folder_id = folder_id
+        starred = True
+        file_path = file
 
         mime_type, _ = mimetypes.guess_type(file_path)
         media_content = MediaFileUpload(file_path, mimetype=mime_type)
@@ -40,5 +38,10 @@ def upload_files(excel_file_path: str) -> None:
 
 
 if __name__ == '__main__':
-    excel_file_path = 'template_upload.xlsx'
-    upload_files(excel_file_path)
+    lst_of_path = [
+        'C:\\Maki\\Uvik\\google-drive-tg-bot\\files\\path.txt',
+        'C:\\Maki\\Uvik\\google-drive-tg-bot\\files\\maki.txt',
+        'C:\\Maki\\Uvik\\google-drive-tg-bot\\files\\kirya.txt'
+    ]
+
+    upload_files(lst_of_path)
