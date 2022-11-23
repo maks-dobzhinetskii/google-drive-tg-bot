@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 token*files/
 *.pickle
-token*files/*.pickle
+token files/*.pickle
 
 files
+token files/token_sheets_v4.pickle

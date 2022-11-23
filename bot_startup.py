@@ -1,6 +1,11 @@
 import asyncio
 
+from tg_bot import document_handler
+from tg_bot import message_handler
+
 from telebot import asyncio_filters
+
+from tg_bot.bot import bot
 
 
 if __name__ == "__main__":
