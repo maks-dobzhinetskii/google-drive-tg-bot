@@ -26,6 +26,8 @@ async def handle_direct_upload(message: telebot.types.Message):
     with open(file_name, "wb") as new_file:
         new_file.write(downloaded_file)
 
+    upload_data_to_drive_zip.upload_files([os.path.abspath(file_name)])
+
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result_message.id, text="Done!")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())

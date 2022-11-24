@@ -18,16 +18,21 @@ def sharing_file_link(excel_link: str) -> None:
     )
 
     for row in response["values"][1:]:
-        print(row)
         email = row[0]
-        file_id = row[1:]
+        filenames = row[1]
+        files_list = filenames.split(",")
+        ids = []
+        for filename in files_list:
+            query = f"name = '{filename}'"
+            result = service_drive.files().list(q=query).execute()
+            ids.append(result["files"][0]["id"])
+            print(result)
 
-        print(email)
         request_body = {"role": "reader", "type": "user", "emailAddress": email}
 
-        for file in file_id[0].split(","):
+        for id in ids:
             service_drive.permissions().create(
-                fileId=file,
+                fileId=id,
                 body=request_body,
             ).execute()
 
