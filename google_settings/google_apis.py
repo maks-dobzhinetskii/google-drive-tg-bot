@@ -14,7 +14,7 @@ def create_service(client_secret_file, api_name, api_version, *scopes, prefix=''
 
     cred = None
     working_dir = os.getcwd()
-    token_dir = 'token files'
+    token_dir = 'token_files'
     pickle_file = f'token_{API_SERVICE_NAME}_{API_VERSION}{prefix}.pickle'
 
     # Check if token dir exists first, if not, create the folder
