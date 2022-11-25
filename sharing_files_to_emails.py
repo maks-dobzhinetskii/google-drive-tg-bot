@@ -26,7 +26,6 @@ def sharing_file_link(excel_link: str) -> None:
             query = f"name = '{filename}'"
             result = service_drive.files().list(q=query).execute()
             ids.append(result["files"][0]["id"])
-            print(result)
 
         request_body = {"role": "reader", "type": "user", "emailAddress": email}
 

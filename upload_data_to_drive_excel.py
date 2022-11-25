@@ -6,6 +6,11 @@ from googleapiclient.http import MediaFileUpload
 from google_settings.create_service_settings import create_drive_service
 from utils import overwrite_files
 
+from users.database import engine, metadata
+
+
+metadata.create_all(engine)
+
 
 def upload_files(excel_file_path: str) -> None:
     drive_service = create_drive_service()
