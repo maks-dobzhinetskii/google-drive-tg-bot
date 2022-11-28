@@ -1,0 +1,14 @@
+services:
+    db:
+        image: postgres:14.5
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        ports:
+            - 6666:5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=google_drive_tg_bot_user
+
+volumes:
+    postgres_data:
