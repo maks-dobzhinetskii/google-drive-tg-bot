@@ -134,3 +134,4 @@ token files/*.pickle
 files
 token files/token_sheets_v4.pickle
 .DS_Store
+.vscode

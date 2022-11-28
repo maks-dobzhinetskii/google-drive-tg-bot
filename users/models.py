@@ -7,9 +7,9 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
-class User(Base):
+class UserInfo(Base):
 
-    __tablename__ = 'user'
+    __tablename__ = 'userinfo'
 
     id = Column(INTEGER(11), primary_key=True)
     username = Column(String(255))
