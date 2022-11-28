@@ -10,6 +10,7 @@ from datetime import datetime
 from tg_bot.bot import bot
 from tg_bot.markup import home_markup
 from tg_bot.states import UploadStates
+from utils import create_user_folder
 
 
 @bot.message_handler(state=UploadStates.direct_upload, content_types=["document"])
@@ -17,6 +18,8 @@ async def handle_direct_upload(message: telebot.types.Message):
     result_message = await bot.send_message(message.chat.id, "Downloading your file...", disable_web_page_preview=True)
     file_path = await bot.get_file(message.document.file_id)
     downloaded_file = await bot.download_file(file_path.file_path)
+    drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
+    folder_id = create_user_folder(drive_folder_name)
     relative_download_folder_path = (
         f"downloads/direct_upload/{message.from_user.username}/{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
     )
@@ -26,7 +29,7 @@ async def handle_direct_upload(message: telebot.types.Message):
     with open(file_name, "wb") as new_file:
         new_file.write(downloaded_file)
 
-    upload_data_to_drive_zip.upload_files([os.path.abspath(file_name)])
+    upload_data_to_drive_zip.upload_files([os.path.abspath(file_name)], folder_id)
 
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result_message.id, text="Done!")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
@@ -38,6 +41,8 @@ async def handle_zip_upload(message: telebot.types.Message):
     result_message = await bot.send_message(message.chat.id, "Downloading...", disable_web_page_preview=True)
     file_path = await bot.get_file(message.document.file_id)
     downloaded_file = await bot.download_file(file_path.file_path)
+    drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
+    folder_id = create_user_folder(drive_folder_name)
     relative_download_folder_path = (
         f"downloads/zip_upload/{message.from_user.username}/{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
     )
@@ -56,7 +61,7 @@ async def handle_zip_upload(message: telebot.types.Message):
     else:
         paths = [f"{unzipped_folder_name}/{path}" for path in os.listdir(unzipped_folder_name)]
 
-    upload_data_to_drive_zip.upload_files(paths)
+    upload_data_to_drive_zip.upload_files(paths, folder_id)
 
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result_message.id, text="Done!")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
@@ -68,6 +73,8 @@ async def handle_excel_upload(message: telebot.types.Message):
     result_message = await bot.send_message(message.chat.id, "Downloading...", disable_web_page_preview=True)
     file_path = await bot.get_file(message.document.file_id)
     downloaded_file = await bot.download_file(file_path.file_path)
+    drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
+    folder_id = create_user_folder(drive_folder_name)
     relative_download_folder_path = (
         f"downloads/excel_upload/{message.from_user.username}/{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
     )
@@ -77,7 +84,7 @@ async def handle_excel_upload(message: telebot.types.Message):
     with open(file_name, "wb") as new_file:
         new_file.write(downloaded_file)
 
-    upload_data_to_drive_excel.upload_files(os.path.abspath(file_name))
+    upload_data_to_drive_excel.upload_files(os.path.abspath(file_name), folder_id)
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result_message.id, text="Done!")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())

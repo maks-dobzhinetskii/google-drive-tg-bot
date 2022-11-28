@@ -7,9 +7,8 @@ from googleapiclient.http import MediaFileUpload
 from google_settings.create_service_settings import create_drive_service
 
 
-def upload_files(lst_of_path: List[str]) -> None:
+def upload_files(lst_of_path: List[str], folder_id: str) -> None:
     drive_service = create_drive_service()
-    folder_id = '1lVZH7ZUeYa2Seat-UYFz99TLkrVMa0VQ'
     query = f"parents = '{folder_id}'"
     response = drive_service.files().list(q=query).execute()
     files = response.get('files')
@@ -39,4 +38,4 @@ if __name__ == '__main__':
         'C:\\Maki\\Uvik\\google-drive-tg-bot\\files\\kirya.txt'
     ]
 
-    upload_files(lst_of_path)
+    upload_files(lst_of_path, '1lVZH7ZUeYa2Seat-UYFz99TLkrVMa0VQ')

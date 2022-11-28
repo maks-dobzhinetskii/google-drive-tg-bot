@@ -4,15 +4,13 @@ import pandas as pd
 from googleapiclient.http import MediaFileUpload
 
 from google_settings.create_service_settings import create_drive_service
-from utils import overwrite_files
 
 
-def upload_files(excel_file_path: str) -> None:
+def upload_files(excel_file_path: str, folder_id: str) -> None:
     drive_service = create_drive_service()
     file_list = pd.read_excel(excel_file_path, sheet_name="files")
     file_list = file_list.fillna("")
 
-    folder_id = "1lVZH7ZUeYa2Seat-UYFz99TLkrVMa0VQ"
     query = f"parents = '{folder_id}'"
     response = drive_service.files().list(q=query).execute()
     files = response.get("files")
@@ -33,10 +31,8 @@ def upload_files(excel_file_path: str) -> None:
 
         if not any(file_name == dictionary["name"] for dictionary in files):
             drive_service.files().create(body=request_body, media_body=media_content).execute()
-        else:
-            overwrite_files(files, file_name, drive_service, request_body, media_content)
 
 
 if __name__ == "__main__":
     excel_file_path = "template_upload.xlsx"
-    upload_files(excel_file_path)
+    upload_files(excel_file_path, "1lVZH7ZUeYa2Seat-UYFz99TLkrVMa0VQ")

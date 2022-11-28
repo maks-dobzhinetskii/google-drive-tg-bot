@@ -1,7 +1,7 @@
 from google_settings.create_service_settings import create_drive_service, create_sheets_service
 
 
-def sharing_file_link(excel_link: str) -> None:
+def sharing_file_link(excel_link: str, folder_id: str) -> None:
     service_sheets = create_sheets_service()
     service_drive = create_drive_service()
 

@@ -1,13 +1,9 @@
-from googleapiclient.discovery import Resource
-from typing import List
-
-from googleapiclient.http import MediaFileUpload
+from google_settings.create_service_settings import create_drive_service
 
 
-def overwrite_files(files: List[dict], file_name: str, service: Resource, request_body: dict, media_content: MediaFileUpload) -> None:
-    for dictionary in files:
-        if file_name == dictionary['name']:
-            result = input(f'Do you want to overwrite {file_name} file?')
-            if int(result):
-                service.files().delete(fileId=dictionary['id']).execute()
-                service.files().create(body=request_body, media_body=media_content).execute()
+def create_user_folder(folder_name: str) -> str:
+    drive_service = create_drive_service()
+    file_metadata = {"name": folder_name, "mimeType": "application/vnd.google-apps.folder"}
+    file = drive_service.files().create(body=file_metadata, fields="id").execute()
+    print(f"{folder_name} folder created id={file.get('id')}")
+    return file.get("id")

@@ -4,10 +4,12 @@ import telebot
 
 import upload_data_to_drive_zip
 
+from datetime import datetime
 from sharing_files_to_emails import sharing_file_link
 from tg_bot.bot import bot
 from tg_bot.markup import cancel_markup, home_markup
 from tg_bot.states import UploadStates
+from utils import create_user_folder
 
 
 @bot.message_handler(commands=["start", "help"])
@@ -43,6 +45,8 @@ async def upload_files_from_folder(message: telebot.types.Message):
 @bot.message_handler(state=UploadStates.folder_upload)
 async def process_path(message: telebot.types.Message):
     folder_path = message.text
+    drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
+    folder_id = create_user_folder(drive_folder_name)
     res_msg = await bot.send_message(
         message.chat.id,
         f"Uploading files from {folder_path}",
@@ -52,7 +56,7 @@ async def process_path(message: telebot.types.Message):
         paths = [f"{folder_path}{path}" for path in os.listdir(folder_path)]
     else:
         paths = [f"{folder_path}/{path}" for path in os.listdir(folder_path)]
-    upload_data_to_drive_zip.upload_files(paths)
+    upload_data_to_drive_zip.upload_files(paths, folder_id)
     await bot.edit_message_text(chat_id=message.chat.id, message_id=res_msg.id, text="Upload completed")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
