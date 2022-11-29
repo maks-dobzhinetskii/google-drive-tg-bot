@@ -5,6 +5,7 @@ amqp==5.1.1
 asgi-redis==1.4.3
 asgiref==3.5.2
 async-timeout==4.0.2
+asyncpg==0.27.0
 attrs==22.1.0
 autobahn==22.7.1
 Automat==22.10.0
@@ -63,6 +64,7 @@ platformdirs==2.5.3
 pluggy==1.0.0
 prompt-toolkit==3.0.32
 protobuf==4.21.9
+psycopg2-binary==2.9.5
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycodestyle==2.9.1
@@ -94,3 +96,5 @@ wcwidth==0.2.5
 wrapt==1.14.1
 yarl==1.8.1
 zope.interface==5.5.1
+databases==0.6.2
+SQLAlchemy==1.4.44

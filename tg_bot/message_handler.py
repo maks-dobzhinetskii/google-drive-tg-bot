@@ -2,14 +2,14 @@ import os
 
 import telebot
 
-import upload_data_to_drive_zip
+from google_utils import upload_data_to_drive_zip
 
 from datetime import datetime
-from sharing_files_to_emails import sharing_file_link
+from google_utils.sharing_files_to_emails import sharing_file_link
 from tg_bot.bot import bot
 from tg_bot.markup import cancel_markup, home_markup
 from tg_bot.states import UploadStates
-from utils import create_user_folder
+from google_utils.utils import create_user_folder
 
 
 @bot.message_handler(commands=["start", "help"])

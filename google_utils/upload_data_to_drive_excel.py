@@ -5,7 +5,8 @@ from googleapiclient.http import MediaFileUpload
 
 from google_settings.create_service_settings import create_drive_service
 
-from users.database import engine, metadata
+from users.database import engine
+from users.models import metadata
 
 
 metadata.create_all(engine)
