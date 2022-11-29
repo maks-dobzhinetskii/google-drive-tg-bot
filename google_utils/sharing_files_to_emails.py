@@ -1,7 +1,7 @@
 from google_settings.create_service_settings import create_drive_service, create_sheets_service
 
 
-def sharing_file_link(excel_link: str) -> None:
+def sharing_file_link(excel_link: str, folder_id: str) -> None:
     service_sheets = create_sheets_service()
     service_drive = create_drive_service()
 
@@ -23,7 +23,7 @@ def sharing_file_link(excel_link: str) -> None:
         files_list = filenames.split(",")
         ids = []
         for filename in files_list:
-            query = f"name = '{filename}'"
+            query = f"name = '{filename}', '{folder_id}' in parents"
             result = service_drive.files().list(q=query).execute()
             ids.append(result["files"][0]["id"])
 
