@@ -36,25 +36,27 @@ def get_folder_info(folder_id: int) -> Select:
 
 
 def create_user(username: str) -> None:
-    session.add(UserInfo(username=username))
+    user = UserInfo(username=username)
+    session.add(user)
     session.commit()
+    return user
 
 
 def create_message(media_group_id, file_name, folder_id, user_id):
-    session.add(
-        Message(media_group_id=media_group_id, file_name=file_name, folder_id=folder_id, user_id=user_id)
-    )
+    msg = Message(media_group_id=media_group_id, file_name=file_name, folder_id=folder_id, user_id=user_id)
+    session.add(msg)
     session.commit()
+    return msg
 
 
 def create_folder(name_folder, id_drive_folder):
-    session.add(
-        Folder(
-            name_folder=name_folder,
-            id_drive_folder=id_drive_folder,
-        )
+    folder = Folder(
+        name_folder=name_folder,
+        id_drive_folder=id_drive_folder,
     )
+    session.add(folder)
     session.commit()
+    return folder
 
 
 if __name__ == "__main__":
@@ -62,6 +64,6 @@ if __name__ == "__main__":
         print(el.file_name)
     create_folder('test_folder3', 'drive_id3')
     create_message(69, 'j.txt', 1, 1)
-    create_user('mot')
+    create_user('pes')
     print(get_folder_info())
     print(get_message_list_of_user('mot'))
