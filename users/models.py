@@ -22,6 +22,7 @@ class Message(Base):
     media_group_id = Column(INTEGER)
     file_name = Column(String(50))
     folder_id = Column(INTEGER, ForeignKey('folder.id'))
+    user_id = Column(INTEGER, ForeignKey('userinfo.id'))
 
 
 class UserInfo(Base):
@@ -29,4 +30,3 @@ class UserInfo(Base):
 
     id = Column(INTEGER(20), primary_key=True)
     username = Column(String(255))
-    message_id = Column(INTEGER, ForeignKey('message.id'))
