@@ -19,9 +19,10 @@ class Message(Base):
     __tablename__ = 'message'
 
     id = Column(INTEGER(20), primary_key=True)
-    media_group_id = Column(INTEGER)
+    media_group_id = Column(String(50))
     file_name = Column(String(50))
-    folder_id = Column(INTEGER, ForeignKey('folder.id'))
+    folder_id = Column(INTEGER(10), ForeignKey('folder.id'))
+    user_id = Column(INTEGER(10), ForeignKey('userinfo.id'))
 
 
 class UserInfo(Base):
@@ -29,4 +30,3 @@ class UserInfo(Base):
 
     id = Column(INTEGER(20), primary_key=True)
     username = Column(String(255))
-    message_id = Column(INTEGER, ForeignKey('message.id'))
