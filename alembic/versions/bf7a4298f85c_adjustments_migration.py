@@ -1,8 +1,8 @@
-"""test migration
+"""Adjustments migration
 
-Revision ID: 0c97ae2ec439
+Revision ID: bf7a4298f85c
 Revises: 
-Create Date: 2022-11-30 11:41:58.492324
+Create Date: 2022-12-01 16:18:31.213504
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
-revision = '0c97ae2ec439'
+revision = 'bf7a4298f85c'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -31,10 +31,10 @@ def upgrade() -> None:
     )
     op.create_table('message',
     sa.Column('id', mysql.INTEGER(display_width=20), nullable=False),
-    sa.Column('media_group_id', mysql.INTEGER(), nullable=True),
+    sa.Column('media_group_id', sa.String(length=50), nullable=True),
     sa.Column('file_name', sa.String(length=50), nullable=True),
-    sa.Column('folder_id', mysql.INTEGER(), nullable=True),
-    sa.Column('user_id', mysql.INTEGER(), nullable=True),
+    sa.Column('folder_id', mysql.INTEGER(display_width=10), nullable=True),
+    sa.Column('user_id', mysql.INTEGER(display_width=10), nullable=True),
     sa.ForeignKeyConstraint(['folder_id'], ['folder.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['userinfo.id'], ),
     sa.PrimaryKeyConstraint('id')

@@ -36,7 +36,7 @@ def get_folder_info(folder_id: int) -> Select:
 
 
 def get_folder_info_by_id_drive_folder(id_drive_folder: str) -> Select:
-    return session.query(Folder).where(Folder.id_drive_folder == id_drive_folder)
+    return session.query(Folder).where(Folder.id_drive_folder == id_drive_folder).first()
 
 
 def create_user(username: str) -> UserInfo:
