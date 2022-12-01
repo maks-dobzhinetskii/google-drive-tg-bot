@@ -14,7 +14,7 @@ def get_query_by_media_group_id(media_group_id: int) -> Select:
     return select(Message).where(Message.media_group_id == media_group_id)
 
 
-def get_message_list_of_user(username: int):
+def get_message_list_of_user(username: int) -> str:
     file_name, folder_id = (
         session.query(Message.file_name, Message.folder_id)
         .join(UserInfo, Message.user_id == UserInfo.id)
@@ -35,21 +35,25 @@ def get_folder_info(folder_id: int) -> Select:
     return folder_name, id_drive_folder
 
 
-def create_user(username: str) -> None:
+def get_folder_info_by_id_drive_folder(id_drive_folder: str) -> Select:
+    return session.query(Folder).where(Folder.id_drive_folder == id_drive_folder)
+
+
+def create_user(username: str) -> UserInfo:
     user = UserInfo(username=username)
     session.add(user)
     session.commit()
     return user
 
 
-def create_message(media_group_id, file_name, folder_id, user_id):
+def create_message(media_group_id, file_name, folder_id, user_id) -> Message:
     msg = Message(media_group_id=media_group_id, file_name=file_name, folder_id=folder_id, user_id=user_id)
     session.add(msg)
     session.commit()
     return msg
 
 
-def create_folder(name_folder, id_drive_folder):
+def create_folder(name_folder, id_drive_folder) -> Folder:
     folder = Folder(
         name_folder=name_folder,
         id_drive_folder=id_drive_folder,
