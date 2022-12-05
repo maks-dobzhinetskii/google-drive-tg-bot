@@ -62,12 +62,6 @@ async def process_path(message: telebot.types.Message):
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
 
 
-@bot.message_handler(state=UploadStates.home_page, commands=["upload_excel"])
-async def excel_files_upload(message: telebot.types.Message):
-    await bot.set_state(message.from_user.id, UploadStates.excel_upload, message.chat.id)
-    await bot.send_message(message.chat.id, "Send excel table file", reply_markup=cancel_markup())
-
-
 @bot.message_handler(state=UploadStates.home_page, commands=["give_access"])
 async def give_access_to_files(message: telebot.types.Message):
     await bot.set_state(message.from_user.id, UploadStates.give_access, message.chat.id)
