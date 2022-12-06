@@ -1,15 +1,20 @@
 """Adjustments migration
 
 Revision ID: bf7a4298f85c
-Revises:
+Revises: 
 Create Date: 2022-12-01 16:18:31.213504
+
 """
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import mysql
 
 # revision identifiers, used by Alembic.
+<<<<<<<< HEAD:alembic/versions/bf7a4298f85c_adjustments_migration.py
 revision = 'bf7a4298f85c'
+========
+revision = '8178f361488d'
+>>>>>>>> origin/dev-6-orm:alembic/versions/8178f361488d_created_db.py
 down_revision = None
 branch_labels = None
 depends_on = None
