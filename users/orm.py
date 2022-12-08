@@ -14,7 +14,7 @@ def get_query_by_media_group_id(media_group_id: int) -> Select:
     return select(Message).where(Message.media_group_id == media_group_id)
 
 
-def get_message_list_of_user(username: int) -> str:
+def get_message_list_of_user(username: str) -> str:
     file_name, folder_id = (
         session.query(Message.file_name, Message.folder_id)
         .join(UserInfo, Message.user_id == UserInfo.id)
@@ -50,7 +50,7 @@ def get_folder_info_by_username(username: str):
         .join(Message, Folder.id == Message.folder_id)
         .join(UserInfo, UserInfo.id == Message.user_id)
         .where(UserInfo.username == username)
-        .first()
+        .all()
     )
 
 

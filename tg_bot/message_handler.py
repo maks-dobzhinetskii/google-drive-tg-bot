@@ -1,15 +1,12 @@
 import os
+from datetime import datetime
 
 import telebot
 
-from google_utils import upload_data_to_drive_zip
-
-from datetime import datetime
-from google_utils.sharing_files_to_emails import sharing_file_link
+from google_utils import drive
 from tg_bot.bot import bot
 from tg_bot.markup import cancel_markup, home_markup
 from tg_bot.states import UploadStates
-from google_utils.utils import create_user_folder
 
 
 @bot.message_handler(commands=["start", "help"])
@@ -46,7 +43,7 @@ async def upload_files_from_folder(message: telebot.types.Message):
 async def process_path(message: telebot.types.Message):
     folder_path = message.text
     drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
-    folder_id = create_user_folder(drive_folder_name)
+    folder_id = drive.create_user_folder(drive_folder_name)
     res_msg = await bot.send_message(
         message.chat.id,
         f"Uploading files from {folder_path}",
@@ -56,10 +53,14 @@ async def process_path(message: telebot.types.Message):
         paths = [f"{folder_path}{path}" for path in os.listdir(folder_path)]
     else:
         paths = [f"{folder_path}/{path}" for path in os.listdir(folder_path)]
-    upload_data_to_drive_zip.upload_files(paths, folder_id)
+    drive.upload_files(paths, folder_id)
     await bot.edit_message_text(chat_id=message.chat.id, message_id=res_msg.id, text="Upload completed")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
-    await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
+    await bot.send_message(
+        message.chat.id,
+        f"Files are uploaded to {drive_folder_name}\nUse this folder name when specifying files for sharing\nChoose next action",
+        reply_markup=home_markup(),
+    )
 
 
 @bot.message_handler(state=UploadStates.home_page, commands=["give_access"])
@@ -73,8 +74,16 @@ async def give_access_to_files(message: telebot.types.Message):
 @bot.message_handler(state=UploadStates.give_access)
 async def process_link(message: telebot.types.Message):
     result = await bot.send_message(message.chat.id, "Starting to share files")
-    sharing_file_link(message.text)
+    files_folder_mapped = {}
+    folders = drive.get_user_folders(message.from_user.username)
+    for folder in folders["files"]:
+        if message.from_user.username in folder["name"]:
+            files = tuple(file["name"] for file in drive.get_files_from_folder(folder["id"])["files"])
+            files_folder_mapped[files] = folder["id"]
+    print(files_folder_mapped)
+    drive.share_files(message.text, files_folder_mapped)
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result.id, text="Files successfully shared")
+    await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
 
 
