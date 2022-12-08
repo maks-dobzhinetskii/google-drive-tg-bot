@@ -1,4 +1,5 @@
 import mimetypes
+import datetime
 import os
 from typing import List, Tuple, Dict
 
@@ -102,8 +103,46 @@ def get_files_from_folder(drive_folder_id: str) -> Tuple[str]:
         .list(
             q=f"'{drive_folder_id}' in parents",
             pageSize=50,
-            fields="nextPageToken, files(id, name)",
+            fields="nextPageToken, files(id, name, modifiedTime)",
         )
         .execute()
     )
     return files
+
+
+def get_all_files() -> Tuple[str]:
+    service_drive = create_drive_service()
+    files = (
+        service_drive.files()
+        .list(
+            pageSize=50,
+            fields="nextPageToken, files(id, name, modifiedTime)",
+        )
+        .execute()
+    )
+    return files
+
+
+def delete_files_by_list_id(files_id: List[str]) -> None:
+    service_drive = create_drive_service()
+    for id in files_id:
+        service_drive.files().delete(fileId=id).execute()
+
+
+def delete_all_files(files):
+    service_drive = create_drive_service()
+    for dictionary in files['files']:
+        service_drive.files().delete(fileId=dictionary['id']).execute()
+
+
+def check_period(period: str) -> None:
+    today = datetime.datetime.today()
+    files = get_all_files()
+
+    for file in files['files']:
+        time = file['modifiedTime']
+        modified_time = datetime.datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%fZ')
+        time_delta = today - modified_time
+
+        if time_delta.days >= period:
+            delete_files_by_list_id([file['id']])
