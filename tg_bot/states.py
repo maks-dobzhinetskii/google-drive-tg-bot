@@ -6,5 +6,4 @@ class UploadStates(StatesGroup):
     direct_upload = State()
     zip_upload = State()
     folder_upload = State()
-    excel_upload = State()
     give_access = State()

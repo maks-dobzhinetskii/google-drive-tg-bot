@@ -1,9 +1,8 @@
 """Adjustments migration
 
 Revision ID: bf7a4298f85c
-Revises: 
+Revises:
 Create Date: 2022-12-01 16:18:31.213504
-
 """
 from alembic import op
 import sqlalchemy as sa
