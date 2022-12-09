@@ -5,7 +5,7 @@ import telebot
 
 from google_utils import drive
 from tg_bot.bot import bot
-from tg_bot.markup import cancel_markup, home_markup
+from tg_bot.markup import cancel_markup, home_markup, drive_management_markup
 from tg_bot.states import UploadStates
 
 
@@ -19,6 +19,12 @@ async def start_message(message: telebot.types.Message):
 async def menu_message(message: telebot.types.Message):
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.reply_to(message, "Hi!\nI'm Google Drive uploader bot.", reply_markup=home_markup())
+
+
+@bot.message_handler(state=UploadStates.home_page, commands=["drive_management"])
+async def drive_management_handler(message: telebot.types.Message):
+    await bot.set_state(message.from_user.id, UploadStates.drive_management, message.chat.id)
+    await bot.reply_to(message, "Choose management tool", reply_markup=drive_management_markup())
 
 
 @bot.message_handler(state=UploadStates.home_page, commands=["upload_files"])
