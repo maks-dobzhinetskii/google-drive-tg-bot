@@ -131,18 +131,18 @@ def delete_files_by_list_id(files_id: List[str]) -> None:
 
 def delete_all_files(files):
     service_drive = create_drive_service()
-    for dictionary in files['files']:
-        service_drive.files().delete(fileId=dictionary['id']).execute()
+    for dictionary in files["files"]:
+        service_drive.files().delete(fileId=dictionary["id"]).execute()
 
 
-def check_period(period: str) -> None:
+def delete_expired_files(period: int) -> None:
     today = datetime.datetime.today()
     files = get_all_files()
 
-    for file in files['files']:
-        time = file['modifiedTime']
-        modified_time = datetime.datetime.strptime(time, '%Y-%m-%dT%H:%M:%S.%fZ')
+    for file in files["files"]:
+        time = file["modifiedTime"]
+        modified_time = datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%S.%fZ")
         time_delta = today - modified_time
 
         if time_delta.days >= period:
-            delete_files_by_list_id([file['id']])
+            delete_files_by_list_id([file["id"]])
