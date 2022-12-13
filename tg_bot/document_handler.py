@@ -1,11 +1,12 @@
 import os
 import shutil
 import zipfile
-from datetime import datetime, timedelta
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 
 import telebot
 
+import logger
 from google_utils import drive
 from tg_bot.bot import bot
 from tg_bot.markup import home_markup
@@ -19,7 +20,6 @@ from users.orm import (
     get_user_info,
     session,
 )
-
 
 media_groups = dict()
 
@@ -38,6 +38,7 @@ EXP_TIME = timedelta(minutes=3)
 
 @bot.message_handler(state=UploadStates.direct_upload, content_types=["document"])
 async def handle_direct_upload(message: telebot.types.Message):
+    logger.info(f"Direct upload of file started {message.document.file_name}")
     existing_user = get_user_info(message.from_user.username)
     user = existing_user if existing_user else create_user(message.from_user.username)
     group_id = message.media_group_id
@@ -77,6 +78,7 @@ async def handle_direct_upload(message: telebot.types.Message):
     create_message(group_id, message.document.file_name, folder_id, user.id)
 
     drive.upload_files([os.path.abspath(file_name)], media_groups[group_id].drive_folder_id)
+    logger.info(f"Completed downloading of {message.document.file_name}")
     shutil.rmtree(os.path.abspath(relative_download_folder_path))
 
     if datetime.now() - media_groups[group_id].handler_start_time > EXP_TIME:
@@ -103,6 +105,7 @@ async def handle_zip_upload(message: telebot.types.Message):
             message.chat.id, "Error!\nDocument must be a zip archive\nChoose option:", reply_markup=home_markup()
         )
         return
+    logger.info(f"Upload of zip file started {message.document.file_name}")
     result_message = await bot.send_message(message.chat.id, "Downloading...", disable_web_page_preview=True)
     file_path = await bot.get_file(message.document.file_id)
     downloaded_file = await bot.download_file(file_path.file_path)
@@ -127,6 +130,7 @@ async def handle_zip_upload(message: telebot.types.Message):
         paths = [f"{unzipped_folder_name}/{path}" for path in os.listdir(unzipped_folder_name)]
 
     drive.upload_files(paths, folder_id)
+    logger.info(f"Completed downloading of {message.document.file_name}")
     shutil.rmtree(os.path.abspath(relative_download_folder_path))
 
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result_message.id, text="Done!")
