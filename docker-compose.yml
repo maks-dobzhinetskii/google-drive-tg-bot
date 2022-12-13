@@ -13,7 +13,9 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        command: python bot_startup.py
+        volumes:
+            - ./:/usr/src/app
+        command: bash -c "alembic upgrade head && python bot_startup.py"
         depends_on:
             - db
 
