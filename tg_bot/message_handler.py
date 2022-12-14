@@ -3,9 +3,10 @@ from datetime import datetime
 
 import telebot
 
+import logger
 from google_utils import drive
 from tg_bot.bot import bot
-from tg_bot.markup import cancel_markup, home_markup, drive_management_markup
+from tg_bot.markup import cancel_markup, drive_management_markup, home_markup
 from tg_bot.states import UploadStates
 
 
@@ -48,18 +49,21 @@ async def upload_files_from_folder(message: telebot.types.Message):
 @bot.message_handler(state=UploadStates.folder_upload)
 async def process_path(message: telebot.types.Message):
     folder_path = message.text
+    if folder_path[-1] == os.path.sep:
+        folder_path += os.path.sep
+    logger.info(f"Uploading files from folder {folder_path}")
     drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
     folder_id = drive.create_user_folder(drive_folder_name)
+    logger.info(f"Created drive folder {drive_folder_name}")
     res_msg = await bot.send_message(
         message.chat.id,
         f"Uploading files from {folder_path}",
         reply_markup=telebot.types.ReplyKeyboardRemove(selective=False),
     )
-    if folder_path[-1] == os.path.sep:
-        paths = [f"{folder_path}{path}" for path in os.listdir(folder_path)]
-    else:
-        paths = [f"{folder_path}/{path}" for path in os.listdir(folder_path)]
+    paths = [f"{folder_path}{path}" for path in os.listdir(folder_path)]
+
     drive.upload_files(paths, folder_id)
+    logger.info(f"Files from folder {folder_path} uploaded successfully")
     await bot.edit_message_text(chat_id=message.chat.id, message_id=res_msg.id, text="Upload completed")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(
@@ -79,6 +83,8 @@ async def give_access_to_files(message: telebot.types.Message):
 
 @bot.message_handler(state=UploadStates.give_access)
 async def process_link(message: telebot.types.Message):
+    spreadsheet_link = message.text
+    logger.info(f"Giving access rights based on google spreadsheet: {spreadsheet_link}")
     result = await bot.send_message(message.chat.id, "Starting to share files")
     files_folder_mapped = {}
     folders = drive.get_user_folders(message.from_user.username)
@@ -87,7 +93,8 @@ async def process_link(message: telebot.types.Message):
             files = tuple(file["name"] for file in drive.get_files_from_folder(folder["id"])["files"])
             files_folder_mapped[files] = folder["id"]
     print(files_folder_mapped)
-    drive.share_files(message.text, files_folder_mapped)
+    drive.share_files(spreadsheet_link, files_folder_mapped)
+    logger.info(f"Access rights from {spreadsheet_link} were granted successfully")
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result.id, text="Files successfully shared")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
