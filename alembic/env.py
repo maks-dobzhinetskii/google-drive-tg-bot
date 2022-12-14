@@ -10,7 +10,7 @@ target_metadata = [Base.metadata]
 
 config = context.config
 
-config.set_main_option('sqlalchemy.url', 'postgresql://postgres:postgres@db:5432/google_drive_tg_bot_user')
+config.set_main_option('sqlalchemy.url', 'postgresql://postgres:postgres@localhost:5432/google_drive_tg_bot_user')
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
