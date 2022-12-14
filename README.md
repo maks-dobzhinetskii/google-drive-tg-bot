@@ -28,13 +28,15 @@ This app allows you to manage your google drive (upload, share, delete files) th
 
 In order to use this app: clone this repository to your machine, in terminal go to project directory and run this commands:
 
-### Start database container with:
+### Start database and bot containers with:
 
 ```
 
 docker compose up -d --build
 
 ```
+
+### If you want to run bot locally you can use commands listed below:
 
 ### Apply latest migration to the database:
 
