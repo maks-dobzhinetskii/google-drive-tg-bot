@@ -16,6 +16,8 @@ services:
         volumes:
             - ./:/usr/src/app
         command: bash -c "alembic upgrade head && python bot_startup.py"
+        env_file:
+            - .env
         depends_on:
             - db
         ports:

@@ -44,9 +44,7 @@ async def clear_all_files(message: telebot.types.Message):
     drive.delete_all_files(drive.get_all_files())
     logger.info("All files deleted")
     await bot.edit_message_text(
-        chat_id=message.chat.id,
-        message_id=result_message.id,
-        text="Successfully deleted all files\nChoose next action",
-        reply_markup=home_markup(),
+        chat_id=message.chat.id, message_id=result_message.id, text="Successfully deleted all files\nChoose next action"
     )
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
+    await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
