@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bold-gearbox-368613",
+  "private_key_id": "432f3488f994127e3831e316e1f8011309c03524",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCsbe7c7sOOiL3W\nX28HUnIE0K0iGn6e4GaCgzD01bOz16Ynzjvi/nhYUZtL6E2Fw7+GYSKskp/i29k1\nDE5GtbpDEJaKGA3+YdcOg0/xXNF4TMHegoISEA70nrLf92ENMzG1UlcR4uXZxzTE\nEpnIm/3xIXzTRQe1nKpqDnz/Bhv17BWYhvPp2lVXqiZoqtttS5kvdYmKPVrWwPPm\n7cSqaIeMJnaboGIi+d1TOPbGma4yWpxwBoZnEXUmBQeN8x2PEn4lDCRDxceItBiK\npugUwpNTTV6+udyY8qihnVtf3zMsCEGDJ1kQANBZnykae67wH4z9FerB7mJh6KzV\nIFHPUkIVAgMBAAECgf8SsNfzmu4XxTrOwgmHAajaXMRnrfeLwUdbXl0wLPoNxJJ+\nPhy/vlXNPQtYbxX4Kf/Y0S6xBjPOo4Yn+e2CPLC0FFg9H95kdLabHCDOSQFryOY6\n+GqhCpyUZ598J5Sdma8JuKM3jSDdOnq9xkZlOIOOX9LoE9OCHDlcxbVG76KYRZGC\nLQcVCX0y6jzTcfel7pKIvvVl6eqjdwoVjy0rLtYIyrCAvyEgvDzzlK/dqu0v5Gj3\nyi738MrawGGoA7+/hJm4OOecIrLenVux//hEGIQAZ6aWKaKV1gNzH5Ds5Xe4BlxF\nLZtlZ1B3IhTfGRlfIy6dhYkofAm9SQIJR1NFQbkCgYEA1utyCqgV5kze8LpFQQkz\nQ+iy3O4h14LfLCWBnFk/E+0393kZmJcrAXSHdx8FjvSgtKIHyJbMO9kBSkn7cnEK\ngA0ICPVYHGSUkNZG9/9N3XjYESrwMgfK3lqmjtWjB5UpdUoHT/K3+Pas6kXkK+FY\nbbCzfm0H7hHuym7jxGtB2z0CgYEAzWNVJ3PorXEoDEBQclKS1r4O2Wg9gthvIT9b\n6kACM1iQLgCFkQvnKI+ksJQppApac3kf8HnK440vsEc7bLq0Dlo6T5fb1Jt3X/Gl\n6QS0/sHSdN0BR2o3BelzMZGACjz+WsxfcDaOZUfBYWHtHdwpzD75Ptp6jewhHbRQ\nR7+PT7kCgYEAvkdP/X1Zfj+atljETdM+byZLjWzLy4lT2zsNqIYfYZ4JifHOpplX\n+v7XnLB7dFjDG4nFCGPySB5VlRcxJt5MJJjk/0FwlBq8qgr8ZD7GCooeCf0REcpy\nYzCw/A7LO0BlpzE2jiLfnO2QpA3i+LKXXu4tzIXtmmqIFvPcdh9b/CUCgYEAr1PR\nWFl40b5b6oFoav8UPF6H/I0gnTa3PxGAHCrB9iTvB2YInvYjQRvGAbqpBVCVQCew\n3S6KxM88W2WjU8DZfbsGNfWzgf2o3O1CrPUIsMSyLHKQ6e7Aw7oyTKkhPRwuIUJ/\nYiIgUlL7wG7A5JGR2LoVONN2dPqSlnHbajQbWXkCgYEAjMbDX92gnNW6gT6sM7eG\n1DwttfUWCRCJgzMWRTqmpP8fHyK4fN3UZxVNRKLFGE3Q9vQW6Cqkd1OYfMnLwZ9M\ngB91TMnXmQxVWidQYrJZnwVODHRj2BiVcyo0bgJd7ww9GuoaXVebjbJ0u/yJ1wpx\nMbU2S9BveCWBDa9QY+jAtJE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "vovalazarev676-gmail-com@bold-gearbox-368613.iam.gserviceaccount.com",
+  "client_id": "110889189363135176431",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vovalazarev676-gmail-com%40bold-gearbox-368613.iam.gserviceaccount.com"
+}
