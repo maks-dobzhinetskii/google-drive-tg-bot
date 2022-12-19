@@ -8,6 +8,9 @@ from googleapiclient.http import MediaFileUpload
 from google_settings.create_service_settings import create_drive_service, create_sheets_service
 
 
+PARENT_FOLDER_ID = os.getenv("PARENT_FOLDER_ID")
+
+
 def upload_files(lst_of_path: List[str], folder_id: str) -> None:
     drive_service = create_drive_service()
     query = f"parents = '{folder_id}'"
@@ -76,7 +79,7 @@ def share_files(excel_link: str, files_folder_mapped: Dict[tuple, str]) -> None:
 
 def create_user_folder(folder_name: str) -> str:
     drive_service = create_drive_service()
-    file_metadata = {"name": folder_name, "mimeType": "application/vnd.google-apps.folder"}
+    file_metadata = {"name": folder_name, "mimeType": "application/vnd.google-apps.folder", 'parents': [PARENT_FOLDER_ID]}
     file = drive_service.files().create(body=file_metadata, fields="id").execute()
     print(f"{folder_name} folder created with id={file.get('id')}")
     return file.get("id")
