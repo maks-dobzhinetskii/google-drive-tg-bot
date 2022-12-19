@@ -1,6 +1,3 @@
-import os
-from datetime import datetime
-
 import telebot
 
 import logger
@@ -38,39 +35,6 @@ async def upload_files_handler(message: telebot.types.Message):
 async def zip_file_upload(message: telebot.types.Message):
     await bot.set_state(message.from_user.id, UploadStates.zip_upload, message.chat.id)
     await bot.send_message(message.chat.id, "Send zip file", reply_markup=cancel_markup())
-
-
-@bot.message_handler(state=UploadStates.home_page, commands=["upload_folder"])
-async def upload_files_from_folder(message: telebot.types.Message):
-    await bot.set_state(message.from_user.id, UploadStates.folder_upload, message.chat.id)
-    await bot.send_message(message.chat.id, "Send path to the folder you want to upload", reply_markup=cancel_markup())
-
-
-@bot.message_handler(state=UploadStates.folder_upload)
-async def process_path(message: telebot.types.Message):
-    folder_path = message.text
-    if folder_path[-1] == os.path.sep:
-        folder_path += os.path.sep
-    logger.info(f"Uploading files from folder {folder_path}")
-    drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
-    folder_id = drive.create_user_folder(drive_folder_name)
-    logger.info(f"Created drive folder {drive_folder_name}")
-    res_msg = await bot.send_message(
-        message.chat.id,
-        f"Uploading files from {folder_path}",
-        reply_markup=telebot.types.ReplyKeyboardRemove(selective=False),
-    )
-    paths = [f"{folder_path}{path}" for path in os.listdir(folder_path)]
-
-    drive.upload_files(paths, folder_id)
-    logger.info(f"Files from folder {folder_path} uploaded successfully")
-    await bot.edit_message_text(chat_id=message.chat.id, message_id=res_msg.id, text="Upload completed")
-    await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
-    await bot.send_message(
-        message.chat.id,
-        f"Files are uploaded to {drive_folder_name}\nUse this folder name when specifying files for sharing\nChoose next action",
-        reply_markup=home_markup(),
-    )
 
 
 @bot.message_handler(state=UploadStates.home_page, commands=["give_access"])

@@ -6,7 +6,5 @@ class UploadStates(StatesGroup):
     drive_management = State()
     direct_upload = State()
     zip_upload = State()
-    folder_upload = State()
     give_access = State()
     setting_expiration = State()
-    
