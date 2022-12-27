@@ -80,7 +80,7 @@ async def handle_direct_upload(message: telebot.types.Message):
     create_message(group_id, message.document.file_name, folder_id, user.id)
 
     drive.upload_files([os.path.abspath(file_name)], media_groups[group_id].drive_folder_id)
-    logger.info(f"Completed uploading of {message.document.file_name}")
+    log.info(f"Completed uploading of {message.document.file_name}")
     shutil.rmtree(os.path.abspath(relative_download_folder_path))
 
     if datetime.now() - media_groups[group_id].handler_start_time > EXP_TIME:
