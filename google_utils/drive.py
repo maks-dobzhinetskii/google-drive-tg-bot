@@ -12,6 +12,7 @@ PARENT_FOLDER_ID = os.getenv("PARENT_FOLDER_ID")
 
 
 def upload_files(lst_of_path: List[str], folder_id: str) -> None:
+    print(PARENT_FOLDER_ID)
     drive_service = create_drive_service()
     query = f"parents = '{folder_id}'"
     response = drive_service.files().list(q=query).execute()
@@ -56,25 +57,26 @@ def share_files(excel_link: str, files_folder_mapped: Dict[tuple, str]) -> None:
         filenames = row[1]
         files_list = filenames.split(",")
         ids = []
+
         for filename in files_list:
-            folder, file = filename.split("/")
+            _, folder, file = filename.split("/")
             folder_id = (
                 service_drive.files()
                 .list(q=f"mimeType='application/vnd.google-apps.folder' and name='{folder}'")
                 .execute()["files"][0]["id"]
             )
-            print(folder_id)
             query = f"name = '{file}' and '{folder_id}' in parents"
             result = service_drive.files().list(q=query).execute()
+
             ids.append(result["files"][0]["id"])
 
         request_body = {"role": "reader", "type": "user", "emailAddress": email}
 
         for id in ids:
-            service_drive.permissions().create(
-                fileId=id,
-                body=request_body,
-            ).execute()
+                service_drive.permissions().create(
+                    fileId=id,
+                    body=request_body,
+                ).execute()
 
 
 def create_user_folder(folder_name: str) -> str:
