@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 import telebot
 
-import logger
+from logs.logger import log
 from google_utils import drive
 from tg_bot.bot import bot
 from tg_bot.markup import home_markup
@@ -38,7 +38,7 @@ EXP_TIME = timedelta(minutes=3)
 
 @bot.message_handler(state=UploadStates.direct_upload, content_types=["document"])
 async def handle_direct_upload(message: telebot.types.Message):
-    logger.info(f"Direct upload of file: {message.document.file_name} started from media group: {message.media_group_id}")
+    log.info("Direct upload started:", file_name=message.document.file_name, media_group_id=message.media_group_id)
     existing_user = get_user_info(message.from_user.username)
     user = existing_user if existing_user else create_user(message.from_user.username)
     group_id = message.media_group_id
@@ -61,7 +61,7 @@ async def handle_direct_upload(message: telebot.types.Message):
     )
     if not os.path.exists(relative_download_folder_path):
         os.makedirs(relative_download_folder_path, exist_ok=True)
-        logger.info(f"Created local folder {relative_download_folder_path}")
+        log.info("Created local folder", relative_download_folder_path=relative_download_folder_path)
     file_name = os.path.join(relative_download_folder_path, message.document.file_name)
     with open(file_name, "wb") as new_file:
         new_file.write(downloaded_file)
@@ -71,7 +71,7 @@ async def handle_direct_upload(message: telebot.types.Message):
     else:
         folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
         drive_folder_id = drive.create_user_folder(folder_name)
-        logger.info(f"Created drive folder {folder_name}")
+        log.info("Created drive folder", folder_name=folder_name)
         media_groups[group_id].drive_folder_id = drive_folder_id
         folder = create_folder(folder_name, drive_folder_id)
     folder_id = folder.id
@@ -98,7 +98,7 @@ async def handle_direct_upload(message: telebot.types.Message):
             f"Files are uploaded to {drive_folder_name}\nUse this folder name when specifying files for sharing\nChoose next action",
             reply_markup=home_markup(),
         )
-        logger.info(f"Finished uploading files from media group: {message.media_group_id}")
+        log.info("Finished uploading files from media group", media_group_id=message.media_group_id)
 
 
 @bot.message_handler(state=UploadStates.zip_upload, content_types=["document"])
@@ -107,15 +107,15 @@ async def handle_zip_upload(message: telebot.types.Message):
         await bot.send_message(
             message.chat.id, "Error!\nDocument must be a zip archive\nChoose option:", reply_markup=home_markup()
         )
-        logger.warning(f"Warning! Document must be a zip archive. Got {message.document.file_name}")
+        log.warning(f"Warning! Document must be a zip archive. Got {message.document.file_name}")
         return
-    logger.info(f"Upload of zip file started {message.document.file_name}")
+    log.info("Upload of zip file started", file_name=message.document.file_name)
     result_message = await bot.send_message(message.chat.id, "Downloading...", disable_web_page_preview=True)
     file_path = await bot.get_file(message.document.file_id)
     downloaded_file = await bot.download_file(file_path.file_path)
     drive_folder_name = f"{message.from_user.username}_{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
     folder_id = drive.create_user_folder(drive_folder_name)
-    logger.info(f"Created drive folder {drive_folder_name}")
+    log.info("Created drive folder", drive_folder_name=drive_folder_name)
     relative_download_folder_path = (
         f"downloads/zip_upload/{message.from_user.username}/{datetime.now().strftime('%Y_%m_%d-%I_%M_%S_%p')}"
     )
@@ -123,7 +123,7 @@ async def handle_zip_upload(message: telebot.types.Message):
     unzipped_folder_name = file_name.replace(".zip", "")
     if not os.path.exists(unzipped_folder_name):
         os.makedirs(unzipped_folder_name, exist_ok=True)
-        logger.info(f"Created local folder {relative_download_folder_path}")
+        log.info("Created local folder", relative_download_folder_path=relative_download_folder_path)
     with open(file_name, "wb") as new_file:
         new_file.write(downloaded_file)
 
@@ -136,7 +136,7 @@ async def handle_zip_upload(message: telebot.types.Message):
         paths = [f"{unzipped_folder_name}/{path}" for path in os.listdir(unzipped_folder_name)]
 
     drive.upload_files(paths, folder_id)
-    logger.info(f"Completed uploading of {message.document.file_name}")
+    log.info("Completed uploading of", file_name=message.document.file_name)
     shutil.rmtree(os.path.abspath(relative_download_folder_path))
 
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result_message.id, text="Done!")
@@ -146,4 +146,4 @@ async def handle_zip_upload(message: telebot.types.Message):
         f"Files are uploaded to {drive_folder_name}\nUse this folder name when specifying files for sharing\nChoose next action",
         reply_markup=home_markup(),
     )
-    logger.info(f"Finished uploading files from zip archive: {message.document.file_name}")
+    log.info("Finished uploading files from zip archive", file_name=message.document.file_name)
