@@ -5,8 +5,7 @@ from typing import Dict, List, Tuple
 
 from googleapiclient.http import MediaFileUpload
 
-from google_settings.create_service_settings import (create_drive_service,
-                                                     create_sheets_service)
+from google_settings.create_service_settings import create_drive_service, create_sheets_service
 from logs.logger import log
 
 PARENT_FOLDER_ID = os.getenv("PARENT_FOLDER_ID")
@@ -74,17 +73,21 @@ def share_files(excel_link: str, files_folder_mapped: Dict[tuple, str]) -> None:
         request_body = {"role": "reader", "type": "user", "emailAddress": email}
 
         for id in ids:
-                service_drive.permissions().create(
-                    fileId=id,
-                    body=request_body,
-                ).execute()
+            service_drive.permissions().create(
+                fileId=id,
+                body=request_body,
+            ).execute()
 
 
 def create_user_folder(folder_name: str) -> str:
     drive_service = create_drive_service()
-    file_metadata = {"name": folder_name, "mimeType": "application/vnd.google-apps.folder", 'parents': [PARENT_FOLDER_ID]}
+    file_metadata = {
+        "name": folder_name,
+        "mimeType": "application/vnd.google-apps.folder",
+        "parents": [PARENT_FOLDER_ID],
+    }
     file = drive_service.files().create(body=file_metadata, fields="id").execute()
-    log.info("Folder created with", folder_name=folder_name, id=file.get('id'))
+    log.info("Folder created with", folder_name=folder_name, id=file.get("id"))
     return file.get("id")
 
 
