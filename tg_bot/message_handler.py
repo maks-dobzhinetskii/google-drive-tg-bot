@@ -1,6 +1,6 @@
 import telebot
 
-import logger
+from logs.logger import log
 from google_utils import drive
 from tg_bot.bot import bot
 from tg_bot.markup import cancel_markup, drive_management_markup, home_markup
@@ -48,7 +48,7 @@ async def give_access_to_files(message: telebot.types.Message):
 @bot.message_handler(state=UploadStates.give_access)
 async def process_link(message: telebot.types.Message):
     spreadsheet_link = message.text
-    logger.info(f"Giving access rights based on google spreadsheet: {spreadsheet_link}")
+    log.info("Giving access rights based on google spreadsheet ", spreadsheet_link=spreadsheet_link)
     result = await bot.send_message(message.chat.id, "Starting to share files")
     files_folder_mapped = {}
     folders = drive.get_user_folders(message.from_user.username)
@@ -58,7 +58,7 @@ async def process_link(message: telebot.types.Message):
             files_folder_mapped[files] = folder["id"]
     print(files_folder_mapped)
     drive.share_files(spreadsheet_link, files_folder_mapped)
-    logger.info(f"Access rights from {spreadsheet_link} were granted successfully")
+    log.info("Access rights from were granted successfully", spreadsheet_link=spreadsheet_link)
     await bot.edit_message_text(chat_id=message.chat.id, message_id=result.id, text="Files successfully shared")
     await bot.set_state(message.from_user.id, UploadStates.home_page, message.chat.id)
     await bot.send_message(message.chat.id, "Choose next action", reply_markup=home_markup())
